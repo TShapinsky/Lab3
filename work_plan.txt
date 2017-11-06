@@ -1,0 +1,19 @@
+Tobias Shapinsky
+Henry Rachootin
+Single Cycle CPU
+
+-Throughout the week of 11/06-
+ALU (2hrs) - Henry 
+Register File (2hrs) - Toby
+Data Memory (1hr) - Henry
+Program Memory (2hrs) - Toby
+
+-Throughout the week of 11/13-
+Decoder (2hrs) - Henry
+Synthesis (5hrs) - Both
+
+-On Monday-
+Test Programs (1hr) - Both
+
+-On Thursday-
+Write Report (4hrs) - Both
