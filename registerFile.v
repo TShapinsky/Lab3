@@ -1,12 +1,12 @@
 module registerFile
  #(
     parameter width = 32,
-    parameter addresswidth = 7,
+    parameter addresswidth = 5,
     parameter depth = 2**addresswidth
     )
   (
-   output reg [width-1:0]   ReadData1,
-   output reg [width-1:0]   ReadData2,
+   output [width-1:0]   ReadData1,
+   output [width-1:0]   ReadData2,
    input [width-1:0] 	    WriteData,
    input [addresswidth-1:0] ReadRegister1,
    input [addresswidth-1:0] ReadRegister2,
@@ -16,26 +16,16 @@ module registerFile
    );
    //setup registers
    reg [width-1:0] registers [depth-1:0];
+   initial begin
+      reg[0][width-1:0] = 0;
+   end
 
    //do register operations on clock edges
    always @(posedge Clk) begin
-      //check if zero register
-      if(ReadRegister1 == 0) begin
-	 assign ReadData1 = 0;
-      end else begin
-	 //read data from registers
-	 ReadData1 = registers[ReadRegister1];
-      end
-      //check if zero register
-      if(ReadRegister2 == 0) begin
-	 assign ReadData2 = 0;
-      end else begin
-	 //read data from registers
-	 ReadData2 = registers[ReadRegister2];
-      end
-      //check if write flag is high
-      if(RegWrite) begin
-	 registers[WriteRegister] <= WriteData;
+      if(RegWrite && WriteRegister != 0) begin
+	       registers[WriteRegister] <= WriteData;
       end
    end // always @ (posedge Clk)
+   assign ReadData1 = registers[ReadRegister1];
+   assign ReadData2 = registers[ReadRegister2];
 endmodule
