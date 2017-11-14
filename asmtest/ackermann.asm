@@ -1,6 +1,6 @@
 #ackermann function: calculates A($t0, $t1)
 #https://en.wikipedia.org/wiki/Ackermann_function
-#will stackoverflow if m or n is greater then 4
+#will stackoverflow if m or n is greater than 4
 
 addi $t0, $zero, 3 #m = t0
 addi $t1, $zero, 3 #n = t1
