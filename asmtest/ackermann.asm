@@ -9,7 +9,7 @@ sw   $t1  8($sp)         #push n
 addi $sp, $sp, 8
 jal ackermann             #ackermann(m, n);
 lw   $t2,   ($sp)         #pop the return value
-addi $sp, #sp, -4
+addi $sp, $sp, -4
 end:
 j end
 
