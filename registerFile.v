@@ -17,7 +17,7 @@ module registerFile
    //setup registers
    reg [width-1:0] registers [depth-1:0];
    initial begin
-      reg[0][width-1:0] = 0;
+      registers[0][width-1:0] = 0;
    end
 
    //do register operations on clock edges

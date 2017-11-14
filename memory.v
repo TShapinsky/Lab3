@@ -23,7 +23,7 @@ module memory
       for (i = 0; i < wordlength; i = i+1) begin
         always @(posedge clk) begin
           if(writeEnable) begin
-             memory[address+i] <= dataIn[i*width+:width];
+             memory[address+wordlength-1-i] <= dataIn[i*width+:width];
           end
         end // always @ (posedge clk)
       assign dataOut[(wordlength-i-1)*width+:width] = memory[address+i];

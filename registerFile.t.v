@@ -2,20 +2,20 @@
 
 module registerFileTestBench
   ();
-   
+
   wire [31:0] ReadData1;
   wire [31:0] ReadData2;
    reg [31:0] WriteData;
-   reg [6:0]  ReadReg1;
-   reg [6:0] ReadReg2;
-   reg [6:0] WriteReg;
+   reg [4:0]  ReadReg1;
+   reg [4:0] ReadReg2;
+   reg [4:0] WriteReg;
    reg 	     RegWrite;
    reg 	     Clk;
    reg 	     dutpassed;
-   
+
    always #10 Clk = !Clk;
-   
-   
+
+
    registerFile dut(
 		    .ReadRegister1(ReadReg1),
 		    .ReadRegister2(ReadReg2),
@@ -68,17 +68,17 @@ module registerFileTestBench
 	 $display("Test Case 2 Failed: 0x00BADA55 read from register 23");
 	 dutpassed = 0;
       end
-      
-      
+
+
       $display("DUT Passed");
       $finish();
-      
+
    end // initial begin
 
    always @(negedge dutpassed) begin
       $display("DUT Failed");
       $finish();
-      
+
    end
 
-endmodule      
+endmodule
