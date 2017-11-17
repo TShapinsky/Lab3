@@ -17,6 +17,9 @@ module cpuTestBench();
                interrupt);
   initial begin
      currentTest = 0;
+     //list of expected test values
+     //For the "source" of the program this test runs on the cpu
+     //see fullTest.asm
      expectedVals[0] = 15;
      expectedVals[1] = 20;
      expectedVals[2] = 25;
@@ -34,16 +37,23 @@ module cpuTestBench();
      regAddr = 25; //t9
      i = 0;
      #5;
-     for(i = 0; i<1000; i = i + 1) begin
+     for(i = 0; i<10000; i = i + 1) begin
      clk = 1; #5;
      clk = 0; #5;
      end
      #25;
+     if(currentTest != 12) begin
+       $display("Didn't run enough tests!");
+       dutPassed = 0;
+     end
      if(dutPassed) begin
        $display("DUT passed!");
      end
      $finish();
   end
+
+  //cpu interrupts every time it is ready to be tested
+  //we use syscall to fire interrupts
   always @(posedge interrupt) begin
     if(regTest != expectedVals[currentTest]) begin
       $display("Failed test %d", currentTest);

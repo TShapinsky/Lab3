@@ -23,13 +23,17 @@ module cpu
   input[addressWidth-1:0] memTestAddr, output reg[width-1:0] memTest,
   output reg interrupt);
 
+//used to output debug information at syscall
 reg test;
 
+//initialize registers
 initial begin
   test <= 0;
   interrupt <= 0;
 end
 
+//all the wires get defined ahead of time
+//control signals are registers
 wire[width-1:0]         inst_read;
 wire[addressWidth-1:0]  inst_addr;
 
@@ -61,8 +65,11 @@ wire[15:0]                IMM;
 wire[25:0]                ADDR;
 wire[5:0]                 OP;
 
+//sign extend the immediate
 wire[width-1:0] imm;
 assign imm = {{(width-15){IMM[15]}}, IMM[14:0]};
+
+//A WHOLE LOT OF MULTIPLEXORS
 
 //possible next values of the program counter for a BNE
 wire[addressWidth-1:0] BNE_RESULT_OPTIONS[2];
@@ -126,6 +133,7 @@ assign FUNCT = inst_read[5:0];
 assign IMM = inst_read[15:0];
 assign ADDR = inst_read[25:0];
 
+//Giant lookup table of control signals
 always @ (OP or FUNCT) begin
   case(OP)
     `opLW: begin
@@ -233,15 +241,18 @@ always @ (OP or FUNCT) begin
   endcase
 end
 
+//the meat and potatos
 memory mem(clk, mem_read, mem_addr, mem_wen, mem_write);
 memory inst(clk, inst_read, inst_addr, 1'b0, 32'b0);
 alu    ex(alu_out, alu_eq, alu_op, alu_a, alu_b);
 registerFile regs(reg_portA, reg_portB, reg_write, reg_addrA, reg_addrB, reg_addrW, reg_wen, clk);
 
+//advance pc
 always @(posedge clk) begin
   pc <= pcNext;
 end
 
+//initialize pc
 initial begin
   pc = 0;
 end
