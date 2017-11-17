@@ -15,9 +15,9 @@ module memory
     );
 
    reg [width-1:0] 	     memory [depth-1:0];
-   //reg [31:0] 		     i;
 
    initial $readmemh(data, memory);
+   //generate code to read and write one word of data and from memory 
    genvar 		     i;
    generate
       for (i = 0; i < wordlength; i = i+1) begin

@@ -10,7 +10,10 @@ module programMemoryTestBench
 
    always #10 Clk = !Clk;
 
-   memory dut(
+   defparam dut.data = "testmemory.dat";
+   
+   memory dut
+   (
 	      .clk(Clk),
 	      .dataOut(dataOut),
 	      .dataIn(dataIn),
