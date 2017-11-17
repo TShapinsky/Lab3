@@ -11,21 +11,23 @@
 `define  opADDI  6'b001000
 
 `define  fnADD   6'b100000
-`define  fnSUB   6'b100011
+`define  fnSUB   6'b100010
 `define  fnJR    6'b001000
 `define  fnSLT   6'b101010
 `define  fnSYS   6'b001100
 
 module cpu
 #(parameter width = 32, addressWidth = 14, regAddressWidth = 5)
-(input clk, output[width-1:0] reg_portA, output[width-1:0] mem_read);
+(input clk,
+  input[regAddressWidth-1:0] regTestAddr, output reg[width-1:0] regTest,
+  input[addressWidth-1:0] memTestAddr, output reg[width-1:0] memTest,
+  output reg interrupt);
 
 reg test;
-reg[regAddressWidth] testRegAddr;
 
 initial begin
   test <= 0;
-  testRegAddr <= 8;
+  interrupt <= 0;
 end
 
 wire[width-1:0]         inst_read;
@@ -64,7 +66,7 @@ assign imm = {{(width-15){IMM[15]}}, IMM[14:0]};
 
 //possible next values of the program counter for a BNE
 wire[addressWidth-1:0] BNE_RESULT_OPTIONS[2];
-assign BNE_RESULT_OPTIONS[0] = pc+(imm<<2);
+assign BNE_RESULT_OPTIONS[0] = pc+(imm<<2)+4;
 assign BNE_RESULT_OPTIONS[1] = pc+4;
 wire[addressWidth-1:0] bneResult;
 assign bneResult = BNE_RESULT_OPTIONS[alu_eq];
@@ -83,7 +85,7 @@ assign pcNext = PC_NEXT_OPTIONS[pcNextOption];
 //we only address memory based on alue output
 wire[addressWidth-1:0] MEM_ADDR_OPTIONS[2];
 assign MEM_ADDR_OPTIONS[0] = alu_out;
-assign MEM_ADDR_OPTIONS[1] = reg_portA;
+assign MEM_ADDR_OPTIONS[1] = memTestAddr;
 assign mem_addr  = MEM_ADDR_OPTIONS[test]; //LW, SW
 assign mem_write = reg_portB;
 
@@ -103,7 +105,7 @@ assign reg_addrW = REG_WRITE_ADDR_OPTIONS[regWriteAddrOption];
 
 wire[regAddressWidth-1:0] REG_ADDR_A_OPTS[2];
 assign REG_ADDR_A_OPTS[0] = RS;
-assign REG_ADDR_A_OPTS[1] = testRegAddr;
+assign REG_ADDR_A_OPTS[1] = regTestAddr;
 
 assign reg_addrA = REG_ADDR_A_OPTS[test];
 assign reg_addrB = RT;
@@ -216,9 +218,15 @@ always @ (OP or FUNCT) begin
           mem_wen <= 0;
           reg_wen <= 0;
           pcNextOption <= 0;
-          test = 1; #1;
-          $display("%c",mem_read[7:0]);
-          test = 0; #1;
+          test <= 1;
+          #1;
+          regTest <= reg_portA;
+          memTest <= mem_read;
+          #1;
+          interrupt <= 1;
+          #1;
+          test <= 0;
+          interrupt <= 0;
         end
       endcase
     end
