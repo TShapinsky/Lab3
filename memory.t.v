@@ -41,7 +41,7 @@ module programMemoryTestBench
         dutpassed = 0;
       end
 
-      //Test Case 2: Read Second Instruction
+      //Test Case 2: Read Third Instruction
       address = 8;
       #20;//wait for clock
       if(dataOut != 32'h00bada55) begin
